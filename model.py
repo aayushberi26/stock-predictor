@@ -28,7 +28,7 @@ def simple_model_vectors (ticker, d, startDate):
 	df = df.ix[:d]
 	if endClose > endOpen:
 		return (list(df.values.flatten()),1)
-	else
+	else:
 		return (list(df.values.flatten()),0)
 
 '''
@@ -66,7 +66,7 @@ def advanced_model_vectors (ticker, d, startDate):
 	df.drop(['Close'], 1, inplace=True)
 	if endClose > endOpen:
 		return (list(df.values.flatten()),1)
-	else
+	else:
 		return (list(df.values.flatten()),0)
 
 '''
