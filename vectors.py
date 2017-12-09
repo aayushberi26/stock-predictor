@@ -30,10 +30,9 @@ def simple_model_vectors (ticker, d, startDate):
     lst = list(df.values.flatten())
     if endClose > endOpen:
         lst.append(1.0)
-        return lst
     else:
         lst.append(0.0)
-        return lst
+    return lst
 
 '''
  [advanced_model_vectors (d, ticker, startDate)] takes a stock ticker, number of days to evaluate, and the start_date and generates
@@ -68,10 +67,12 @@ def advanced_model_vectors (ticker, d, startDate):
     endClose = df.ix[d].Close
     df = df.ix[:d]
     df.drop(['Close'], 1, inplace=True)
+    lst = list(df.values.flatten())
     if endClose > endOpen:
-        return list(df.values.flatten()).append(1)
+        lst.append(1.0)
     else:
-        return list(df.values.flatten()).append(0)
+        lst.append(0.0)
+    return lst
 
 '''
 [random_date ()] generates a random date between 6/1/2007 and 6/1/2017. 
@@ -82,20 +83,29 @@ def random_date ():
     randDays = randint(0,365*10)
     return (start+datetime.timedelta(days=randDays))
 
-def output_simple (ticker):
-    file = open(ticker+'Simple.csv', 'w')
-    allData = []
+def output_data (ticker):
+    ticker = ticker.upper()
+    fileSimple = open(ticker +'Simple.csv', 'w')
+    fileAdvanced = open(ticker+'Advanced.csv', 'w')
+    allDataSimple = []
+    allDataAdvanced = []
     i = 0
     while i < 5000:
         try:
-            allData.append(simple_model_vectors(ticker, 10, random_date()))
+            randDate = random_date()
+            allDataSimple.append(simple_model_vectors(ticker, 10, randDate))
+            allDataAdvanced.append(advanced_model_vectors(ticker, 10, randDate))
             print("Vector: " + str(i+1) + "/5000")
             i = i+1
         except:
             continue
-    with file:
-        writer = csv.writer(file)
-        writer.writerows(allData)
+    with fileSimple:
+        writer = csv.writer(fileSimple)
+        writer.writerows(allDataSimple)
+    with fileAdvanced:
+        writer = csv.writer(fileAdvanced)
+        writer.writerows(allDataAdvanced)
+
 
 def import_data(file):
     with open(file) as myFile:
@@ -104,19 +114,3 @@ def import_data(file):
         for row in reader:
             allData.append(row)
         return allData
-
-def output_advanced (ticker):
-    ticker = ticker.lower()
-    file = open(ticker+'Advanced.csv', 'w')
-    allData = []
-    i = 0
-    while i < 5000:
-        try:
-            allData.append(advanced_model_vectors(ticker, 10, random_date()))
-            print("Vector: " + str(i+1) + "/5000")
-            i = i+1
-        except:
-            continue
-    with file:
-        writer = csv.writer(file)
-        writer.writerows(allData)
