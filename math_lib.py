@@ -10,3 +10,6 @@ def dot_product(vector1, vector2):
 
 def sigmoid(x):
     return (1.0 / (1.0 + exp(-x)))
+
+def sigmoid_prime(x):
+	return x * (1.0 - x)

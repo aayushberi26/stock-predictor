@@ -40,10 +40,24 @@ class NeuralNetwork:
             input_vector = hidden_layer.layer_outputs(input_vector)
         return self.output_layer.layer_outputs(input_vector)
 
+    def backward_propagate(self, expected):
+        # First we iterate through the output layer and calculate the delta
+        # Then we move inwards from outer to inner hidden layer and apply
+        # the function for calculating error
+        self.output_layer.output_delta(expected)
+        previous_layer = self.output_layer
+        for hidden_layer in  reversed(self.hidden_layers):
+            hidden_layer.layer_delta(previous_layer)
+            previous_layer = hidden_layer
+
+
 if __name__ == "__main__":
     network = NeuralNetwork(5, 1, [2,1])
-    print ("Before")
+    print ("Set Up")
     print (network)
     network.forward_propagate([0.2,0.4,10,20,50])
-    print("After")
+    print("Forward Propogate")
     print (network)
+    network.backward_propagate([1])
+    print("Backward Propogate")
+    print(network)
