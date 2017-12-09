@@ -1,4 +1,6 @@
-from neuron_models import *
+from neuron_models import (
+    NeuronLayer
+)
 
 class NeuralNetwork:
     '''

@@ -1,4 +1,6 @@
-from math import *
+from math import (
+    exp
+)
 
 def dot_product(vector1, vector2):
     prod = 0

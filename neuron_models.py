@@ -1,6 +1,9 @@
 import random
 
-from math_lib import *
+from math_lib import (
+    dot_product,
+    sigmoid
+)
 
 class Neuron:
     '''
