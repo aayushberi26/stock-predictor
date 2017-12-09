@@ -107,7 +107,7 @@ def import_data(file):
 
 def output_advanced (ticker):
     ticker = ticker.lower()
-    file = open(ticker+'Simple.csv', 'w')
+    file = open(ticker+'Advanced.csv', 'w')
     allData = []
     i = 0
     while i < 5000:
