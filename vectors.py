@@ -90,12 +90,12 @@ def output_data (ticker):
     allDataSimple = []
     allDataAdvanced = []
     i = 0
-    while i < 5000:
+    while i < 1100:
         try:
             randDate = random_date()
             allDataSimple.append(simple_model_vectors(ticker, 10, randDate))
             allDataAdvanced.append(advanced_model_vectors(ticker, 10, randDate))
-            print("Vector: " + str(i+1) + "/5000")
+            print("Vector: " + str(i+1) + "/1100")
             i = i+1
         except:
             continue
