@@ -80,6 +80,11 @@ class NeuralNetwork:
                 self.update_weights(entry, learning_rate)
             print("Epoch=%d, Learning Rate=%.3f, error=%.3f" % (epoch, learning_rate, sum_error))
 
+    def predict(self, entry):
+        outputs = self.forward_propagate(entry[:-1])
+        # return output class that network is most confident of
+        return outputs.index(max(outputs))
+
 if __name__ == "__main__":
     dataset = [[2.7810836,2.550537003,0],
 	[1.465489372,2.362125076,0],
@@ -94,7 +99,10 @@ if __name__ == "__main__":
     n_inputs = len(dataset[0]) - 1
     n_outputs = 2
     nn = NeuralNetwork(n_inputs, n_outputs, [2])
-    nn.train(dataset, 0.5, 20)
+    nn.train(dataset, 0.5, 15)
+    for row in dataset:
+        prediction = nn.predict(row)
+        print('Expected=%d, Got=%d' % (row[-1], prediction))
     # for layer in nn.hidden_layers:
     #     print(str(layer))
     # print(str(nn.output_layer))
