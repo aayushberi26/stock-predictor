@@ -45,7 +45,7 @@ class NeuronLayer:
 
     def layer_outputs(self, input_vector):
         # add bias unit at beginning
-        input_vector = [1] + input_vector
+        input_vector = input_vector + [1]
         for neuron in self.neurons:
             neuron.set_output(input_vector)
             # print (str(neuron) + "\n")

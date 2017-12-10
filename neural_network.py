@@ -62,17 +62,17 @@ class NeuralNetwork:
         input_vector = [neuron.output for neuron in self.hidden_layers[-1].neurons]
         self.output_layer.learn(input_vector, learning_rate)
 
-    def train(self, training_set, learning_rate, n_epochs, n_outputs):
+    def train(self, training_set, learning_rate, n_epochs):
         for epoch in range(n_epochs):
             sum_error = 0
             for entry in training_set:
                 outputs = self.forward_propagate(entry[:-1])
                 # set as single output vector with the true output
-                if n_outputs == 1:
+                if self.num_outputs == 1:
                     expected = [entry[-1]]
                 # multiclass
                 else:
-                    expected = [0 for i in range(self.n_outputs)]
+                    expected = [0 for i in range(self.num_outputs)]
                     expected[entry[-1]] = 1
                 errors = [(expected[i] - outputs[i])**2 for i in range(len(expected))]
                 sum_error += sum(errors)
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     n_inputs = len(dataset[0]) - 1
     n_outputs = 1
     nn = NeuralNetwork(n_inputs, n_outputs, [2])
-    nn.train(dataset, 0.5, 20, n_outputs)
-    for layer in nn.hidden_layers:
-        print(str(layer))
-    print(str(nn.output_layer))
+    nn.train(dataset, 0.5, 20)
+    # for layer in nn.hidden_layers:
+    #     print(str(layer))
+    # print(str(nn.output_layer))
