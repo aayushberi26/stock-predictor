@@ -45,21 +45,21 @@ class NeuronLayer:
 
     def layer_outputs(self, input_vector):
         # add bias unit at beginning
-        input_vector = input_vector + [1]
+        input_vector = [1] + input_vector
         for neuron in self.neurons:
             neuron.set_output(input_vector)
             # print (str(neuron) + "\n")
         return [neuron.output for neuron in self.neurons]
 
     def layer_delta(self, prev_layer):
-        errors = []
+        errors = list()
         for i in  range(len(self.neurons)):
             error = 0.0
             for neuron in prev_layer.neurons:
                 error += (neuron.weights[i+1] * neuron.delta)
             errors.append(error)
         for index, neuron in enumerate(self.neurons):
-            neuron.delta = errors[index] *sigmoid_prime(neuron.output)
+            neuron.delta = errors[index] * sigmoid_prime(neuron.output)
 
     def output_delta(self, expected):
         for index, neuron in enumerate(self.neurons):
@@ -68,5 +68,5 @@ class NeuronLayer:
     def learn(self, input_vector, learning_rate):
         for neuron in self.neurons:
             for index,input_val in enumerate(input_vector):
-                neuron.weights[index] += learning_rate * neuron.delta * input_val
+                neuron.weights[index+1] += learning_rate * neuron.delta * input_val
             neuron.weights[0] += learning_rate * neuron.delta

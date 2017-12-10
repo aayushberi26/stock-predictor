@@ -92,7 +92,7 @@ if __name__ == "__main__":
 	[8.675418651,-0.242068655,1],
 	[7.673756466,3.508563011,1]]
     n_inputs = len(dataset[0]) - 1
-    n_outputs = 1
+    n_outputs = 2
     nn = NeuralNetwork(n_inputs, n_outputs, [2])
     nn.train(dataset, 0.5, 20)
     # for layer in nn.hidden_layers:
