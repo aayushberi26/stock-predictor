@@ -37,6 +37,7 @@ class NeuralNetwork:
         # First we iterate through the hidden layers and for each hidden layer
         # we go through the neurons for that hidden layer and apply the function
         for hidden_layer in self.hidden_layers:
+            # print (str(hidden_layer))
             input_vector = hidden_layer.layer_outputs(input_vector)
         return self.output_layer.layer_outputs(input_vector)
 
@@ -49,15 +50,51 @@ class NeuralNetwork:
         for hidden_layer in  reversed(self.hidden_layers):
             hidden_layer.layer_delta(previous_layer)
             previous_layer = hidden_layer
+    
+    def update_weights(self, input_vector, learning_rate):
+        for index,hidden_layer in enumerate(self.hidden_layers):
+            if index == 0:
+                # don't want to include the bias vector
+                input_vector = input_vector[:-1]
+            else:
+                input_vector = [neuron.output for neuron in self.hidden_layers[index-1].neurons]
+            hidden_layer.learn(input_vector, learning_rate)
+        input_vector = [neuron.output for neuron in self.hidden_layers[-1].neurons]
+        self.output_layer.learn(input_vector, learning_rate)
 
+    def train(self, training_set, learning_rate, n_epochs, n_outputs):
+        for epoch in range(n_epochs):
+            sum_error = 0
+            for entry in training_set:
+                outputs = self.forward_propagate(entry[:-1])
+                # set as single output vector with the true output
+                if n_outputs == 1:
+                    expected = [entry[-1]]
+                # multiclass
+                else:
+                    expected = [0 for i in range(self.n_outputs)]
+                    expected[entry[-1]] = 1
+                errors = [(expected[i] - outputs[i])**2 for i in range(len(expected))]
+                sum_error += sum(errors)
+                self.backward_propagate(expected)
+                self.update_weights(entry, learning_rate)
+            print("Epoch=%d, Learning Rate=%.3f, error=%.3f" % (epoch, learning_rate, sum_error))
 
 if __name__ == "__main__":
-    network = NeuralNetwork(5, 1, [2,1])
-    print ("Set Up")
-    print (network)
-    network.forward_propagate([0.2,0.4,10,20,50])
-    print("Forward Propogate")
-    print (network)
-    network.backward_propagate([1])
-    print("Backward Propogate")
-    print(network)
+    dataset = [[2.7810836,2.550537003,0],
+	[1.465489372,2.362125076,0],
+	[3.396561688,4.400293529,0],
+	[1.38807019,1.850220317,0],
+	[3.06407232,3.005305973,0],
+	[7.627531214,2.759262235,1],
+	[5.332441248,2.088626775,1],
+	[6.922596716,1.77106367,1],
+	[8.675418651,-0.242068655,1],
+	[7.673756466,3.508563011,1]]
+    n_inputs = len(dataset[0]) - 1
+    n_outputs = 1
+    nn = NeuralNetwork(n_inputs, n_outputs, [2])
+    nn.train(dataset, 0.5, 20, n_outputs)
+    for layer in nn.hidden_layers:
+        print(str(layer))
+    print(str(nn.output_layer))

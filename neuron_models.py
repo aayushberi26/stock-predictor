@@ -64,3 +64,9 @@ class NeuronLayer:
     def output_delta(self, expected):
         for index, neuron in enumerate(self.neurons):
             neuron.delta = (expected[index] - neuron.output) * sigmoid_prime(neuron.output)
+
+    def learn(self, input_vector, learning_rate):
+        for neuron in self.neurons:
+            for index,input_val in enumerate(input_vector):
+                neuron.weights[index] += learning_rate * neuron.delta * input_val
+            neuron.weights[0] += learning_rate * neuron.delta
