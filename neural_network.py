@@ -81,20 +81,15 @@ class NeuralNetwork:
             print("Epoch=%d, Learning Rate=%.3f, error=%.3f" % (epoch, learning_rate, sum_error))
 
 if __name__ == "__main__":
-    dataset = [[2.7810836,2.550537003,0],
-	[1.465489372,2.362125076,0],
-	[3.396561688,4.400293529,0],
-	[1.38807019,1.850220317,0],
-	[3.06407232,3.005305973,0],
-	[7.627531214,2.759262235,1],
-	[5.332441248,2.088626775,1],
-	[6.922596716,1.77106367,1],
-	[8.675418651,-0.242068655,1],
-	[7.673756466,3.508563011,1]]
-    n_inputs = len(dataset[0]) - 1
+    dataset = import_data("MSFTSimple.csv")
+    data_len = len(dataset)
+    training_set = dataset[:round(0.6*data_len)]
+    cross_validation_set = dataset[round(0.6*data_len):round(0.8*data_len)]
+    test_set = dataset[round(0.8*data_len):]
+    n_inputs = len(training_set[0]) - 1
     n_outputs = 2
     nn = NeuralNetwork(n_inputs, n_outputs, [2])
-    nn.train(dataset, 0.5, 20)
+    nn.train(training_set, 0.5, 20)
     # for layer in nn.hidden_layers:
     #     print(str(layer))
     # print(str(nn.output_layer))

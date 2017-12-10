@@ -109,7 +109,7 @@ def output_data (ticker):
 
 def import_data(file):
     with open(file) as myFile:
-        reader = csv.reader(myFile)
+        reader = csv.reader(myFile, quoting=csv.QUOTE_NONNUMERIC)
         allData = []
         for row in reader:
             allData.append(row)
