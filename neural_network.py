@@ -1,6 +1,8 @@
 from neuron_models import (
     NeuronLayer
 )
+import vectors
+import sys
 
 class NeuralNetwork:
     '''
@@ -73,12 +75,12 @@ class NeuralNetwork:
                 # multiclass
                 else:
                     expected = [0 for i in range(self.num_outputs)]
-                    expected[entry[-1]] = 1
+                    expected[int(entry[-1])] = 1
                 errors = [(expected[i] - outputs[i])**2 for i in range(len(expected))]
                 sum_error += sum(errors)
                 self.backward_propagate(expected)
                 self.update_weights(entry, learning_rate)
-            print("Epoch=%d, Learning Rate=%.3f, error=%.3f" % (epoch, learning_rate, sum_error))
+            print("Epoch=%d   Learning Rate=%.3f   error=%.3f ," % (epoch, learning_rate, sum_error))
 
     def predict(self, entry):
         outputs = self.forward_propagate(entry[:-1])
@@ -86,7 +88,12 @@ class NeuralNetwork:
         return outputs.index(max(outputs))
 
 if __name__ == "__main__":
-    dataset = import_data("MSFTSimple.csv")
+    saveout = sys.stdout
+    f_train = open('MSFT_Training.txt', 'w')
+    sys.stdout = f_train
+
+    file_name = "MSFTSimple.csv"
+    dataset = vectors.import_data(file_name)
     data_len = len(dataset)
     training_set = dataset[:round(0.6*data_len)]
     cross_validation_set = dataset[round(0.6*data_len):round(0.8*data_len)]
@@ -95,10 +102,19 @@ if __name__ == "__main__":
     n_outputs = 2
     nn = NeuralNetwork(n_inputs, n_outputs, [2])
 
-    nn.train(training_set, 0.5, 15)
+    st_output_train = nn.train(training_set, 0.5, 10)
+    sys.stdout = saveout
+    f_train.close()
+
+    f_predict = open('MSFT_Predict.txt', 'w')
+    sys.stdout = f_predict
+
     for row in dataset:
         prediction = nn.predict(row)
-        print('Expected=%d, Got=%d' % (row[-1], prediction))
+        print('Expected=%d   Got=%d ,' % (row[-1], prediction))
+
+    sys.stdout = saveout
+    f_predict= saveout
     # for layer in nn.hidden_layers:
     #     print(str(layer))
     # print(str(nn.output_layer))
