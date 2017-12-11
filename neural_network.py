@@ -397,8 +397,8 @@ if __name__ == "__main__":
     test_set = dataset[round(0.8*data_len):]
     n_inputs = len(training_set[0]) - 1
     n_outputs = 2
-    learning_rates = [0.001, 0.01, 0.1, 0.25, 0.5, 0.75, 0.9]
-    epochs = [100, 1000, 10000]
+    learning_rates = [0.1, 0.25, 0.5]
+    epochs = [100, 1000]
     hidden_layers = [([26], "one_layer"), ([26, 26], "two_layer")]
     for learning_rate in learning_rates:
         for epoch in epochs:
@@ -414,13 +414,18 @@ if __name__ == "__main__":
 
                 sys.stdout = saveout
                 f_train.close()
+
                 # store training output in train_filename
                 cross_validation_filename = "cross_val_" + base_filename
                 f_cross_validation = open("output/"+cross_validation_filename, 'w')
                 sys.stdout = f_cross_validation
+                wrong_cross_validate = 0
                 for row in cross_validation_set:
                     prediction = nn.predict(row)
+                    if prediction != row[-1]:
+                        wrong += 1
                     print('Expected=%d   Got=%d ,' % (row[-1], prediction))
+                    print("Wrong: " + str(wrong_cross_validate) + "/" + str(len(cross_validation_set)))
 
                 sys.stdout = saveout
                 f_cross_validation.close()
@@ -429,9 +434,13 @@ if __name__ == "__main__":
                 testset_filename = "test_" + base_filename
                 f_test = open("output/"+testset_filename, 'w')
                 sys.stdout = f_test
+                wrong_test = 0
                 for row in test_set:
                     prediction = nn.predict(row)
+                    if prediction != row[-1]:
+                        wrong += 1
                     print('Expected=%d   Got=%d ,' % (row[-1], prediction))
+                    print("Wrong: " + str(wrong_test) + "/" + str(len(test_set)))
 
                 sys.stdout = saveout
                 f_test.close()
@@ -450,9 +459,9 @@ if __name__ == "__main__":
     #         print(str(layer))
     #     print(str(nn.output_layer))
 
-    # dataset = [[0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0], [0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0]]
+    # dataset = [[0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0]]
     # nn = NeuralNetwork(2, 2, [5])
-    # nn.train(dataset, 0.2, 1000)
+    # nn.train(dataset, 0.2, 10000)
     # wrong = 0
     # for row in dataset:
     #     prediction = nn.predict(row)
