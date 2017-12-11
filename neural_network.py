@@ -423,9 +423,9 @@ if __name__ == "__main__":
                 for row in cross_validation_set:
                     prediction = nn.predict(row)
                     if prediction != row[-1]:
-                        wrong += 1
+                        wrong_cross_validate += 1
                     print('Expected=%d   Got=%d ,' % (row[-1], prediction))
-                    print("Wrong: " + str(wrong_cross_validate) + "/" + str(len(cross_validation_set)))
+                print("Wrong: " + str(wrong_cross_validate) + "/" + str(len(cross_validation_set)))
 
                 sys.stdout = saveout
                 f_cross_validation.close()
@@ -438,9 +438,9 @@ if __name__ == "__main__":
                 for row in test_set:
                     prediction = nn.predict(row)
                     if prediction != row[-1]:
-                        wrong += 1
+                        wrong_test += 1
                     print('Expected=%d   Got=%d ,' % (row[-1], prediction))
-                    print("Wrong: " + str(wrong_test) + "/" + str(len(test_set)))
+                print("Wrong: " + str(wrong_test) + "/" + str(len(test_set)))
 
                 sys.stdout = saveout
                 f_test.close()
