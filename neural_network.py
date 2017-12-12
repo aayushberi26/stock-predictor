@@ -388,62 +388,73 @@ if __name__ == "__main__":
  #    n_outputs = 2
  #    nn = NeuralNetwork(n_inputs, n_outputs, [26, 26])
  #    nn.train(dataset, 0.5, 10000)
-    saveout = sys.stdout
+    # saveout = sys.stdout
 
-    dataset = vectors.import_data("MSFTSimple.csv")
-    data_len = len(dataset)
-    training_set = dataset[:round(0.6*data_len)]
-    cross_validation_set = dataset[round(0.6*data_len):round(0.8*data_len)]
-    test_set = dataset[round(0.8*data_len):]
-    n_inputs = len(training_set[0]) - 1
-    n_outputs = 2
-    learning_rates = [0.1, 0.25, 0.5]
-    epochs = [100, 1000]
-    hidden_layers = [([26], "one_layer"), ([26, 26], "two_layer")]
-    for learning_rate in learning_rates:
-        for epoch in epochs:
-            for hidden_layer in hidden_layers:
-                base_filename = hidden_layer[1] + "_epoch_" + str(epoch) + "_lrate_" + str(learning_rate) + ".txt"
-                nn = NeuralNetwork(n_inputs, n_outputs, hidden_layer[0])
-                train_filename = "train_" + base_filename
+    # dataset = vectors.import_data("MSFTSimple.csv")
+    # data_len = len(dataset)
+    # training_set = dataset[:round(0.6*data_len)]
+    # cross_validation_set = dataset[round(0.6*data_len):round(0.8*data_len)]
+    # test_set = dataset[round(0.8*data_len):]
+    # n_inputs = len(training_set[0]) - 1
+    # n_outputs = 2
+    # learning_rates = [0.1, 0.25, 0.5, 0.9]
+    # epochs = [100, 1000]
+    # hidden_layers = [([26], "one_layer"), ([26, 26], "two_layer")]
+    # for learning_rate in learning_rates:
+    #     for epoch in epochs:
+    #         for hidden_layer in hidden_layers:
+    #             base_filename = hidden_layer[1] + "_epoch_" + str(epoch) + "_lrate_" + str(learning_rate) + ".txt"
+    #             nn = NeuralNetwork(n_inputs, n_outputs, hidden_layer[0])
+    #             train_filename = "train_" + base_filename
 
-                f_train = open("output/"+train_filename, 'w')
-                sys.stdout = f_train
+    #             f_train = open("output/"+train_filename, 'w')
+    #             sys.stdout = f_train
 
-                nn.train(training_set, learning_rate, epoch)
+    #             nn.train(training_set, learning_rate, epoch)
 
-                sys.stdout = saveout
-                f_train.close()
+    #             sys.stdout = saveout
+    #             f_train.close()
 
-                # store training output in train_filename
-                cross_validation_filename = "cross_val_" + base_filename
-                f_cross_validation = open("output/"+cross_validation_filename, 'w')
-                sys.stdout = f_cross_validation
-                wrong_cross_validate = 0
-                for row in cross_validation_set:
-                    prediction = nn.predict(row)
-                    if prediction != row[-1]:
-                        wrong_cross_validate += 1
-                    print('Expected=%d   Got=%d ,' % (row[-1], prediction))
-                print("Wrong: " + str(wrong_cross_validate) + "/" + str(len(cross_validation_set)))
+    #             # store training output in train_filename
+    #             cross_validation_filename = "cross_val_" + base_filename
+    #             f_cross_validation = open("output/"+cross_validation_filename, 'w')
+    #             sys.stdout = f_cross_validation
+    #             wrong_cross_validate = 0
+    #             for row in cross_validation_set:
+    #                 prediction = nn.predict(row)
+    #                 if prediction != row[-1]:
+    #                     wrong_cross_validate += 1
+    #                 print('Expected=%d   Got=%d ,' % (row[-1], prediction))
+    #             print("Wrong: " + str(wrong_cross_validate) + "/" + str(len(cross_validation_set)))
 
-                sys.stdout = saveout
-                f_cross_validation.close()
+    #             sys.stdout = saveout
+    #             f_cross_validation.close()
 
-                    # store cross_validation output in cross_validation_filename
-                testset_filename = "test_" + base_filename
-                f_test = open("output/"+testset_filename, 'w')
-                sys.stdout = f_test
-                wrong_test = 0
-                for row in test_set:
-                    prediction = nn.predict(row)
-                    if prediction != row[-1]:
-                        wrong_test += 1
-                    print('Expected=%d   Got=%d ,' % (row[-1], prediction))
-                print("Wrong: " + str(wrong_test) + "/" + str(len(test_set)))
+    #                 # store cross_validation output in cross_validation_filename
+    #             testset_filename = "test_" + base_filename
+    #             f_test = open("output/"+testset_filename, 'w')
+    #             sys.stdout = f_test
+    #             wrong_test = 0
+    #             pos_pos = 0
+    #             recall_den = 0
+    #             precision_den = 0
+    #             for row in test_set:
+    #                 prediction = nn.predict(row)
+    #                 if prediction != row[-1]:
+    #                     wrong_test += 1
+    #                 if  row[-1] == 1 and prediction == 1:
+    #                     pos_pos +=1
+    #                 if row[-1] == 1:
+    #                     recall_den += 1
+    #                 if prediction == 1:
+    #                     precision_den += 1
+    #                 print('Expected=%d   Got=%d ,' % (row[-1], prediction))
+    #             print("Wrong: " + str(wrong_test) + "/" + str(len(test_set)))
+    #             print("Recall: " + str(pos_pos) + "/" + str(recall_den))
+    #             print("Precision: " + str(pos_pos) + "/" + str(precision_den))
 
-                sys.stdout = saveout
-                f_test.close()
+    #             sys.stdout = saveout
+    #             f_test.close()
                     # store test set output in testset_filename
 
 
@@ -459,16 +470,23 @@ if __name__ == "__main__":
     #         print(str(layer))
     #     print(str(nn.output_layer))
 
-    # dataset = [[0, 0, 0],[0, 1, 1],[1, 0, 1],[1, 1, 0]]
-    # nn = NeuralNetwork(2, 2, [5])
-    # nn.train(dataset, 0.2, 10000)
-    # wrong = 0
-    # for row in dataset:
-    #     prediction = nn.predict(row)
-    #     if prediction != row[-1]:
-    #         wrong += 1
-    #     print('Expected=%d, Got=%d' % (row[-1], prediction))
-    #     print ("Wrong: "  + str(wrong / len(dataset)))
+    dataset = [[0, 0, 0, 0],
+    [0, 0, 1, 1],
+    [0, 1, 0, 1],
+    [1, 0, 0, 1],
+    [0, 1, 1, 0],
+    [1, 1, 0, 0],
+    [1, 0, 1, 0],
+    [1, 1, 1, 0]]
+    nn = NeuralNetwork(3, 2, [5])
+    nn.train(dataset, 0.5, 1000)
+    wrong = 0
+    for row in dataset:
+        prediction = nn.predict(row)
+        if prediction != row[-1]:
+            wrong += 1
+        print('Expected=%d, Got=%d' % (row[-1], prediction))
+    print ("Wrong: "  + str(wrong / len(dataset)))
 
     # for params in two_layer:
     #     nn = NeuralNetwork(params['num_inputs'], params['num_outputs'], params['hidden_layers'])
